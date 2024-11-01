@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './App.css';
 import BarChart from './BarChart';
+import RevByCountryBar from './RevByCountry';
+//import QuantPriceBar from './QuantByPrice';
 
 function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -52,8 +54,7 @@ function App() {
         <div id="bar-chart-section">
           <h2>Bar Chart: Product Quantity by Category</h2>
           <BarChart />
-          
-          {/* Explanation Section */}
+
           <div className="explanation">
             <button onClick={() => setShowExplanation(!showExplanation)}>
               {showExplanation ? 'Hide Explanation' : 'Show Explanation'}
@@ -65,6 +66,25 @@ function App() {
               </p>
             )}
           </div>
+
+          <h2>Bar Chart: Revenue by Country</h2>
+          <RevByCountryBar />
+          
+          {/* Explanation Section */}
+          <div className="explanation">
+            <button onClick={() => setShowExplanation(!showExplanation)}>
+              {showExplanation ? 'Hide Explanation' : 'Show Explanation'}
+            </button>
+            {showExplanation && (
+              <p>
+                This bar chart represents the revenue from each country listed in the dataset. For any
+                countries with states or provinces, click on the bar to expand the revenue view to statewise.
+              </p>
+            )}
+          </div>
+
+          <h2>Bar Chart: Quantity by Price</h2>
+          
         </div>
 
         {/* Future visualizations would go here */}
