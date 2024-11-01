@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import './App.css';
 import BarChart from './components/BarChart';
+import ChoroplethMap from './components/ChoroplethMap';
 
 function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [showExplanation, setShowExplanation] = useState(false);
+  const [showBarChartExplanation, setShowBarChartExplanation] = useState(false);
+  const [showMapExplanation, setShowMapExplanation] = useState(false);
 
   // Handle sidebar collapse/expand
   const toggleSidebar = () => {
@@ -41,6 +43,7 @@ function App() {
         {!sidebarCollapsed && (
           <ul>
             <li onClick={() => scrollToSection('bar-chart-section')}>Visualization 1</li>
+            <li onClick={() => scrollToSection('choropleth-map-section')}>Visualization 2</li>
             {/* Add more visualizations here */}
           </ul>
         )}
@@ -55,13 +58,31 @@ function App() {
           
           {/* Explanation Section */}
           <div className="explanation">
-            <button onClick={() => setShowExplanation(!showExplanation)}>
-              {showExplanation ? 'Hide Explanation' : 'Show Explanation'}
+            <button onClick={() => setShowBarChartExplanation(!showBarChartExplanation)}>
+              {showBarChartExplanation ? 'Hide Explanation' : 'Show Explanation'}
             </button>
-            {showExplanation && (
+            {showBarChartExplanation && (
               <p>
                 This bar chart represents the quantity of products sold across different product categories.
                 It gives insights into which categories perform better in terms of sales volume.
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Choropleth Map Section */}
+        <div id="choropleth-map-section">
+          <h2>Choropleth Map</h2>
+          <ChoroplethMap />
+          
+          {/* Explanation Section */}
+          <div className="explanation">
+            <button onClick={() => setShowMapExplanation(!showMapExplanation)}>
+              {showMapExplanation ? 'Hide Explanation' : 'Show Explanation'}
+            </button>
+            {showMapExplanation && (
+              <p>
+                This choropleth map visualizes the number of customers in each state of the United States.
               </p>
             )}
           </div>
