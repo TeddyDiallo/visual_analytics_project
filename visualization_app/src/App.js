@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './App.css';
-import BarChart from './BarChart';
+import BarChart from './components/BarChart';
 
 function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -25,8 +25,8 @@ function App() {
       {/* Navbar */}
       <nav className="navbar">
         <ul>
-          <li onClick={() => alert('Team Members')}>Team Members</li>
-          <li onClick={() => alert('About')}>About</li>
+          <li onClick={() => alert('Nandini, Chelsea, Teddy')}>Team Members</li>
+          <li onClick={() => alert('This is our visualization project about customer data.')}>About</li>
         </ul>
       </nav>
       
