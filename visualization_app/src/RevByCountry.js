@@ -25,7 +25,7 @@ const RevByCountryBar = () => {
           .style('overflow', 'visible');
   
         // Process data to group by country and state
-        // Will be in the format: ["country", {total_revenue, [[state1, state1_revenue], [state2, state2_revenue],...]}]
+        // Will be in the format: [country, {total_revenue, [[state1, state1_revenue], [state2, state2_revenue],...]}]
         // So, every country will list 1) total revenue, and 2) a list of state/state-revenue tuples
         const processedData = d3.rollups(
           data,
@@ -37,20 +37,20 @@ const RevByCountryBar = () => {
         );
   
         // Sets up a view for revenue x country by leaving state tuples out of this separate data
-        const categoryData = Array.from(processedData, ([country, { totalRevenue }]) => ({
+        const countryData = Array.from(processedData, ([country, { totalRevenue }]) => ({
           country,
           totalRevenue
         }));
   
         // X-scale setting countries on x axis from overview/country-only data
         const x = d3.scaleBand()
-          .domain(categoryData.map(d => d.country))
+          .domain(countryData.map(d => d.country))
           .range([0, 800])
           .padding(0.2);
   
         //Y-scale setting revenue on y axis
         const y = d3.scaleLinear()
-          .domain([0, d3.max(categoryData, d => d.totalRevenue)])
+          .domain([0, d3.max(countryData, d => d.totalRevenue)])
           .range([400, 0]);
   
         // Clear previous elements
@@ -68,7 +68,7 @@ const RevByCountryBar = () => {
   
         // Bars
         svg.selectAll('.bar')
-          .data(categoryData)
+          .data(countryData)
           .enter()
           .append('rect')
           .attr('class', 'bar')
