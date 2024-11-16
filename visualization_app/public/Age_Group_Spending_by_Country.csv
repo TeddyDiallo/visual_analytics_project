@@ -1,0 +1,33 @@
+,Country,Age Group,Revenue
+1,France,26-35,1464518.0
+2,France,36-45,861094.0
+3,France,46-55,653590.0
+0,France,18-25,360019.0
+4,France,56-65,78677.0
+5,France,66-75,5687.0
+6,France,76-85,3647.0
+7,France,86-95,331.0
+9,Germany,26-35,1734453.0
+10,Germany,36-45,1246153.0
+11,Germany,46-55,593096.0
+8,Germany,18-25,513527.0
+12,Germany,56-65,101753.0
+13,Germany,66-75,15601.0
+14,Germany,76-85,7466.0
+15,Germany,86-95,5087.0
+17,United Kingdom,26-35,1555493.0
+18,United Kingdom,36-45,1338906.0
+19,United Kingdom,46-55,625489.0
+16,United Kingdom,18-25,546255.0
+20,United Kingdom,56-65,158252.0
+21,United Kingdom,66-75,11278.0
+22,United Kingdom,76-85,7363.0
+23,United Kingdom,86-95,1574.0
+26,United States,36-45,3523172.0
+25,United States,26-35,3089385.0
+27,United States,46-55,1826743.0
+24,United States,18-25,977944.0
+28,United States,56-65,827369.0
+29,United States,66-75,62179.0
+30,United States,76-85,2048.0
+31,United States,86-95,0.0
