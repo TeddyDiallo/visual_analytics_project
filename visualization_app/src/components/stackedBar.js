@@ -188,38 +188,48 @@ d3.csv("Age_Group_Spending_by_Country.csv").then(function (data) {
 
   svg.append("g").call(d3.axisLeft(y));
 
-  // Color scale for age groups
   const color = d3.scaleOrdinal()
-      .domain(subgroups)
-      .range(d3.schemeSet2);
+    .domain(subgroups) // Ensure `subgroups` contains all age group names
+    .range([
+        "#1f77b4", // Color for 26-35
+        "#ff7f0e", // Color for 36-45
+        "#2ca02c", // Color for 46-55
+        "#d62728", // Color for 18-25
+        "#9467bd", // Color for 56-65
+        "#8c564b", // Color for 66-75
+        "#e377c2", // Color for 76-85
+        "#7f7f7f"  // Color for 86-95
+    ]);
 
   // Stack the data
   const stackedData = d3.stack().keys(subgroups)(stackData);
 
-  // Function to update the chart
   function updateChart(filteredSubgroups) {
-      const filteredStackedData = d3.stack().keys(filteredSubgroups)(stackData);
+    // Filter the stacked data based on the selected subgroups
+    const filteredStackedData = d3.stack().keys(filteredSubgroups)(stackData);
 
-      const bars = barsGroup.selectAll("g.layer")
-          .data(filteredStackedData);
+    // Select all layer groups and bind the new data
+    const layers = barsGroup.selectAll("g.layer")
+        .data(filteredStackedData);
 
-      // Remove old layers
-      bars.exit().remove();
+    // Remove old layers
+    layers.exit().remove();
 
-      // Add new layers
-      bars.enter()
-          .append("g")
-          .classed("layer", true)
-          .attr("fill", d => color(d.key))
-          .merge(bars)
-          .selectAll("rect")
-          .data(d => d)
-          .join("rect")
-          .attr("x", d => x(d.data.Country))
-          .attr("y", d => y(d[1]))
-          .attr("height", d => y(d[0]) - y(d[1]))
-          .attr("width", x.bandwidth());
-  }
+    // Add new layers and update existing ones
+    layers.enter()
+        .append("g")
+        .classed("layer", true)
+        .merge(layers)
+        .attr("fill", d => color(d.key)) // Ensure each layer gets the correct color
+        .selectAll("rect")
+        .data(d => d)
+        .join("rect")
+        .attr("x", d => x(d.data.Country))
+        .attr("y", d => y(d[1]))
+        .attr("height", d => y(d[0]) - y(d[1]))
+        .attr("width", x.bandwidth());
+}
+
 
   // Add the bars
   const barsGroup = svg.append("g");
