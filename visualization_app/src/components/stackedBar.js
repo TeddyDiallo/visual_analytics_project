@@ -131,28 +131,41 @@
 
 
 
-// code for interactive stacked bar chart
+// Code for interactive stacked bar chart
 // Declare dimensions and margins globally
-var margin = { top: 80, right: 150, bottom: 60, left: 80 },
+var margin = { top: 120, right: 150, bottom: 60, left: 80 }, // Increased top margin
     width = 1000 - margin.left - margin.right,
-    height = 600 - margin.top - margin.bottom;
+    height = 700 - margin.top - margin.bottom; // Increased chart height
 
 // Append the svg object to the body of the page
-var svg = d3.select("#chart")
+const svg = d3.select("#chart")
     .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-    
+
 d3.csv("Age_Group_Spending_by_Country.csv").then(function (data) {
   // Cast revenue to numeric and ensure valid entries
   data.forEach(function (d) {
       d.Revenue = +d.Revenue || 0;
   });
 
-  // Get unique age groups and countries
-  const subgroups = Array.from(new Set(data.map(d => d["Age Group"])));
+  // Group age ranges into broader categories
+  data.forEach(function (d) {
+      if (d["Age Group"] === "18-25") {
+          d.Group = "18-25";
+      } else if (d["Age Group"] === "26-35") {
+          d.Group = "26-35";
+      } else if (["36-45", "46-50"].includes(d["Age Group"])) {
+          d.Group = "36-50";
+      } else {
+          d.Group = "51+";
+      }
+  });
+
+  // Get unique new age groups and countries
+  const subgroups = Array.from(new Set(data.map(d => d.Group)));
   const countries = Array.from(new Set(data.map(d => d.Country)));
 
   // Prepare the data for stacking
@@ -160,12 +173,17 @@ d3.csv("Age_Group_Spending_by_Country.csv").then(function (data) {
   const stackData = groupedData.map(([key, values]) => {
       const entry = { Country: key };
       subgroups.forEach(subgroup => {
-          entry[subgroup] = values.find(v => v["Age Group"] === subgroup)?.Revenue || 0;
+          entry[subgroup] = values
+              .filter(v => v.Group === subgroup)
+              .reduce((sum, v) => sum + v.Revenue, 0);
       });
       return entry;
   });
 
-  console.log("Prepared Stack Data:", stackData);
+  // Compute the maximum stacked value for the y scale
+  const maxStackedValue = d3.max(stackData, d =>
+    d3.sum(subgroups.map(subgroup => d[subgroup]))
+  );
 
   // Set up the X axis (countries)
   const x = d3.scaleBand()
@@ -181,25 +199,15 @@ d3.csv("Age_Group_Spending_by_Country.csv").then(function (data) {
       .style("text-anchor", "end");
 
   // Set up the Y axis (revenue scale)
-  const maxRevenue = d3.max(data, d => d.Revenue);
   const y = d3.scaleLinear()
-      .domain([0, maxRevenue])
+      .domain([0, maxStackedValue * 1.1]) // Add 10% padding to the top
       .range([height, 0]);
 
   svg.append("g").call(d3.axisLeft(y));
 
   const color = d3.scaleOrdinal()
-    .domain(subgroups) // Ensure `subgroups` contains all age group names
-    .range([
-        "#1f77b4", // Color for 26-35
-        "#ff7f0e", // Color for 36-45
-        "#2ca02c", // Color for 46-55
-        "#d62728", // Color for 18-25
-        "#9467bd", // Color for 56-65
-        "#8c564b", // Color for 66-75
-        "#e377c2", // Color for 76-85
-        "#7f7f7f"  // Color for 86-95
-    ]);
+      .domain(subgroups)
+      .range(["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728"]);
 
   // Stack the data
   const stackedData = d3.stack().keys(subgroups)(stackData);
@@ -228,14 +236,14 @@ d3.csv("Age_Group_Spending_by_Country.csv").then(function (data) {
         .attr("y", d => y(d[1]))
         .attr("height", d => y(d[0]) - y(d[1]))
         .attr("width", x.bandwidth());
-}
-
+  }
 
   // Add the bars
   const barsGroup = svg.append("g");
   updateChart(subgroups);
 
   // Add a legend for the Age Groups
+  const legendOrder = ["18-25", "26-35", "36-50", "51+"];
   const legend = svg.append("g")
       .attr("transform", "translate(" + (width + 30) + "," + 10 + ")");
 
@@ -268,27 +276,15 @@ d3.csv("Age_Group_Spending_by_Country.csv").then(function (data) {
           .text(subgroup)
           .style("font-size", "12px")
           .attr("alignment-baseline", "middle")
-          .style("cursor", "pointer")
-          .on("click", function () {
-              if (activeGroup === subgroup) {
-                  activeGroup = null; // Reset if the same group is clicked
-                  updateChart(subgroups);
-                  legend.selectAll("rect").style("opacity", 1); // Reset legend opacity
-              } else {
-                  activeGroup = subgroup;
-                  updateChart([subgroup]); // Show only the selected group
-                  legend.selectAll("rect")
-                      .style("opacity", d => (d === subgroup ? 1 : 0.5));
-              }
-          });
+          .style("cursor", "pointer");
   });
 
   // Add a title to the chart
   svg.append("text")
       .attr("x", width / 2)
-      .attr("y", 0 - margin.top / 2)
+      .attr("y", -margin.top / 2 + 10) // Position the title below the top margin
       .attr("text-anchor", "middle")
       .style("font-size", "24px")
-      .style("text-decoration", "bold")
+      .style("font-weight", "bold")
       .text("Age Group Spending By Country");
 });
