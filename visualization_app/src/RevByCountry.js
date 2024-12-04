@@ -136,7 +136,10 @@ const RevByCountryBar = () => {
             svg.append('g')
               .call(d3.axisBottom(stateX))
               .attr('transform', 'translate(0, 400)')
-              .attr('color', 'black');
+              .attr('color', 'black')
+              .selectAll("text")
+              .attr("transform", "rotate(-45)") // Rotate labels 45 degrees counter-clockwise
+              .style("text-anchor", "end");
   
             svg.append('g')
               .call(d3.axisLeft(stateY))
