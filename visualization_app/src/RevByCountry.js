@@ -115,32 +115,24 @@ const RevByCountryBar = () => {
             // Define x scale
             const stateX = d3.scaleBand()
               // Get state names for x axis
-              .domain(states.map(d => d[0]))
+              .domain(filteredStates.map(d => d[0]))
               .range([0, 800])
               .padding(0.1);
   
             const stateY = d3.scaleLinear()
               // Max y val is max value of any state's revenue from the list of tuples
-              .domain([0, d3.max(states, ([, revenue]) => revenue)])
+              .domain([0, d3.max(filteredStates, ([, revenue]) => revenue)])
               .range([400, 0]);
-  
-            // Transition the current bars out
-            svg.selectAll('.bar')
-              .transition()
-              .duration(500)
-              .attr('width', 0)
-              .remove();
-  
-            // Update axes for states
-            svg.selectAll("g").remove();
+
+
+            // Transition out all existing elements so that state bars refresh properly
+            svg.selectAll("*").remove();
+            
             svg.append('g')
               .call(d3.axisBottom(stateX))
               .attr('transform', 'translate(0, 400)')
-              .attr('color', 'black')
-              .selectAll("text")
-              .attr("transform", "rotate(-45)") // Rotate labels 45 degrees counter-clockwise
-              .style("text-anchor", "end");
-  
+              .attr('color', 'black');
+
             svg.append('g')
               .call(d3.axisLeft(stateY))
               .attr('color', 'black');
