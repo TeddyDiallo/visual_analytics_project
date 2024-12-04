@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './App.css';
 import BarChart from './BarChart';
 import RevByCountryBar from './RevByCountry';
-//import QuantPriceBar from './QuantByPrice';
+//import QuantPriceLine from './QuantByPrice';
 
 function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -84,6 +84,7 @@ function App() {
           </div>
 
           <h2>Bar Chart: Quantity by Price</h2>
+          
           
         </div>
 
