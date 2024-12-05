@@ -203,80 +203,144 @@ const RevByCountryBar = () => {
     // Name of slider is to the left of the slider,
     // value is below the slider
     // Toggle for average vs. total revenue is to top-right of sliders
+    // return (
+    //   <div>
+    //     <div style={{ marginBottom: '20px', textAlign: 'center' }}>
+    //       <button 
+    //       // This is the total revenue by country/state button (makes chart
+    //       // show the total revenue for an entity)
+    //         onClick={() => setRevMode('total')} 
+    //         style={{ 
+    //           backgroundColor: revMode === 'total' ? 'mediumpurple' : '#ddd', 
+    //           color: revMode === 'total' ? 'white' : 'black', 
+    //           marginRight: '10px', 
+    //           padding: '10px', 
+    //           cursor: 'pointer' 
+    //         }}
+    //       >
+    //         Total Revenue
+    //       </button>
+    //       <button 
+    //       // This is the avg revenue by country/state button (shows avg revenue
+    //       // divided by transactions for the given entity)
+    //         onClick={() => setRevMode('average')} 
+    //         style={{ 
+    //           backgroundColor: revMode === 'average' ? 'mediumpurple' : '#ddd', 
+    //           color: revMode === 'average' ? 'white' : 'black', 
+    //           padding: '10px', 
+    //           cursor: 'pointer' 
+    //         }}
+    //       >
+    //         Average Revenue
+    //       </button>
+    //     </div>
+    //     <div style={{ marginBottom: '20px' }}>
+    //       <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+    //         <div style={{ textAlign: 'center' }}>
+    //           <label>
+    //             Min Revenue:
+    //             <input
+    //               type="range"
+    //               min="0"
+    //               max="12000000"
+    //               value={minRevenue}
+    //               onChange={(e) => {
+    //                 const value = Number(e.target.value);
+    //                 // If the new value of minimum exceeds maximum, cap it
+    //                 if (value <= maxRevenue) setMinRevenue(value);
+    //                 else setMinRevenue(maxRevenue);
+    //               }}
+    //             />
+    //           </label>
+    //           <div style={{ marginTop: '10px' }}>{minRevenue}</div>
+    //         </div>
+    //         <div style={{ textAlign: 'center' }}>
+    //           <label>
+    //             Max Revenue:
+    //             <input
+    //               type="range"
+    //               min="0"
+    //               max="12000000"
+    //               value={maxRevenue}
+    //               onChange={(e) => {
+    //                 const value = Number(e.target.value);
+    //                 // If the new value of maximum is below minimum, limit to min
+    //                 if (value >= minRevenue) setMaxRevenue(value);
+    //                 else setMaxRevenue(minRevenue);
+    //               }}
+    //             />
+    //           </label>
+    //           <div style={{ marginTop: '10px' }}>{maxRevenue}</div>
+    //         </div>
+    //       </div>
+    //     </div>
+    //     <svg ref={svgRef}></svg>
+    //   </div>
+    // );
+
     return (
-      <div>
-        <div style={{ marginBottom: '20px', textAlign: 'center' }}>
-          <button 
-          // This is the total revenue by country/state button (makes chart
-          // show the total revenue for an entity)
-            onClick={() => setRevMode('total')} 
-            style={{ 
-              backgroundColor: revMode === 'total' ? 'mediumpurple' : '#ddd', 
-              color: revMode === 'total' ? 'white' : 'black', 
-              marginRight: '10px', 
-              padding: '10px', 
-              cursor: 'pointer' 
-            }}
-          >
-            Total Revenue
-          </button>
-          <button 
-          // This is the avg revenue by country/state button (shows avg revenue
-          // divided by transactions for the given entity)
-            onClick={() => setRevMode('average')} 
-            style={{ 
-              backgroundColor: revMode === 'average' ? 'mediumpurple' : '#ddd', 
-              color: revMode === 'average' ? 'white' : 'black', 
-              padding: '10px', 
-              cursor: 'pointer' 
-            }}
-          >
-            Average Revenue
-          </button>
-        </div>
-        <div style={{ marginBottom: '20px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-            <div style={{ textAlign: 'center' }}>
-              <label>
-                Min Revenue:
-                <input
-                  type="range"
-                  min="0"
-                  max="12000000"
-                  value={minRevenue}
-                  onChange={(e) => {
-                    const value = Number(e.target.value);
-                    // If the new value of minimum exceeds maximum, cap it
-                    if (value <= maxRevenue) setMinRevenue(value);
-                    else setMinRevenue(maxRevenue);
-                  }}
-                />
-              </label>
-              <div style={{ marginTop: '10px' }}>{minRevenue}</div>
-            </div>
-            <div style={{ textAlign: 'center' }}>
-              <label>
-                Max Revenue:
-                <input
-                  type="range"
-                  min="0"
-                  max="12000000"
-                  value={maxRevenue}
-                  onChange={(e) => {
-                    const value = Number(e.target.value);
-                    // If the new value of maximum is below minimum, limit to min
-                    if (value >= minRevenue) setMaxRevenue(value);
-                    else setMaxRevenue(minRevenue);
-                  }}
-                />
-              </label>
-              <div style={{ marginTop: '10px' }}>{maxRevenue}</div>
-            </div>
-          </div>
-        </div>
-        <svg ref={svgRef}></svg>
+  <div>
+    {/* Controls container */}
+    <div className="controls-container">
+      {/* Buttons for Total and Average Revenue */}
+      <div className="buttons-container">
+        <button
+          onClick={() => setRevMode('total')}
+          className={revMode === 'total' ? 'active' : ''}
+        >
+          Total Revenue
+        </button>
+        <button
+          onClick={() => setRevMode('average')}
+          className={revMode === 'average' ? 'active' : ''}
+        >
+          Average Revenue
+        </button>
       </div>
-    );
+
+      {/* Sliders for Min and Max Revenue */}
+      <div className="sliders-container">
+        <div className="slider-group">
+          <label>
+            Min Revenue:
+            <input
+              type="range"
+              min="0"
+              max="12000000"
+              value={minRevenue}
+              onChange={(e) => {
+                const value = Number(e.target.value);
+                if (value <= maxRevenue) setMinRevenue(value);
+                else setMinRevenue(maxRevenue);
+              }}
+            />
+          </label>
+          <div>{minRevenue}</div>
+        </div>
+        <div className="slider-group">
+          <label>
+            Max Revenue:
+            <input
+              type="range"
+              min="0"
+              max="12000000"
+              value={maxRevenue}
+              onChange={(e) => {
+                const value = Number(e.target.value);
+                if (value >= minRevenue) setMaxRevenue(value);
+                else setMaxRevenue(minRevenue);
+              }}
+            />
+          </label>
+          <div>{maxRevenue}</div>
+        </div>
+      </div>
+    </div>
+    {/* SVG container for the chart */}
+    <svg ref={svgRef}></svg>
+  </div>
+);
+
   };
   
   export default RevByCountryBar;

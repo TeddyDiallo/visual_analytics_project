@@ -34,16 +34,17 @@ function App() {
       <h1 className="page-title">Sales Data Dashboard</h1>
 
       <div className={`sidebar ${sidebarCollapsed ? 'collapsed' : ''}`}>
-        <button onClick={toggleSidebar} className="collapse-btn">
-          {sidebarCollapsed ? '>' : '<'}
-        </button>
-        {!sidebarCollapsed && (
-          <ul>
-            <li onClick={() => scrollToSection('bar-chart-section')}>Visualization 1</li>
-            {/* Add more visualizations here */}
-          </ul>
-        )}
-      </div>
+  <button onClick={toggleSidebar} className="collapse-btn">
+    {sidebarCollapsed ? '>' : '<'}
+  </button>
+  {!sidebarCollapsed && (
+    <ul>
+      <li onClick={() => scrollToSection('bar-chart-section')}>Revenue by Country</li>
+      <li onClick={() => scrollToSection('visualization-2')}> Demographics & Profitability</li>
+      <li onClick={() => scrollToSection('visualization-3')}>Visualization 3</li>
+    </ul>
+  )}
+</div>
 
       {/* Main content */}
       <div className="content">
@@ -62,13 +63,21 @@ function App() {
                 countries with states or provinces, click on the bar to expand the revenue view to statewise.
               </p>
             )}
-          </div>          
-          
+          </div>
+
+        <div id="visualization-2">
+          <h2>Visualization 2: Placeholder</h2>
+          <p>This is where the second visualization will go.</p>
         </div>
 
-        {/* Future visualizations would go here */}
+        <div id="visualization-3">
+          <h2>Visualization 3: Placeholder</h2>
+          <p>This is where the third visualization will go.</p>
+        </div>          
+          
       </div>
     </div>
+  </div>
   );
 }
 
