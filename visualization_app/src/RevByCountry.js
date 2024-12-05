@@ -1,15 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 
-//TODO: FILTER BY REVENUE RANGE, ADJUST X AXIS LABELS
 const RevByCountryBar = () => {
     const svgRef = useRef();
     const [data, setData] = useState([]);
     // Use this to track which country is expanded (if any), default is none and will generate main view
     const [expandedCountry, setExpandedCountry] = useState(null);
     // Use these to track and set the range of revenue vals to display
+    // TODO IN FUTURE: get maxRevenue to dynamically reset its max value
+    // when the mode is changed to average instead of total
     const [minRevenue, setMinRevenue] = useState(0);
     const [maxRevenue, setMaxRevenue] = useState(12000000);
+    // Use this to track whether displaying total or average revenue
+    const [revMode, setRevMode] = useState('total');
   
     // Fetch CSV Data
     useEffect(() => {
@@ -46,16 +49,20 @@ const RevByCountryBar = () => {
         );
   
         // Sets up a view for revenue x country by leaving state tuples out of this separate data
-        const countryData = Array.from(processedData, ([country, { totalRevenue }]) => ({
+        // Also checks for the revenue display mode (avg or total)
+        const countryData = Array.from(processedData, ([country, { totalRevenue, states }]) => ({
           country,
-          totalRevenue
+          rev: revMode === 'total' 
+            ? totalRevenue 
+            : totalRevenue / data.filter(d => d['Country'] === country).length || 0,
+          stateCt: states.length,
         }));
 
         // Determine here whether country or state view (need this bc of slider addition)
         if (!expandedCountry) {
           // Filter country data by revenue range (specified by sliders)
           const filteredData = countryData.filter(
-            d => d.totalRevenue >= minRevenue && d.totalRevenue <= maxRevenue
+            d => d.rev >= minRevenue && d.rev <= maxRevenue
           );
     
           // X-scale setting countries on x axis from overview/country-only data
@@ -66,7 +73,7 @@ const RevByCountryBar = () => {
     
           //Y-scale setting revenue on y axis
           const y = d3.scaleLinear()
-            .domain([0, d3.max(filteredData, d => d.totalRevenue)])
+            .domain([0, d3.max(filteredData, d => d.rev)])
             .range([400, 0]);
     
           // Clear previous elements
@@ -89,10 +96,19 @@ const RevByCountryBar = () => {
             .append('rect')
             .attr('class', 'bar')
             .attr('x', d => x(d.country))
-            .attr('y', d => y(d.totalRevenue))
+            .attr('y', d => y(d.rev))
             .attr('width', x.bandwidth())
-            .attr('height', d => 400 - y(d.totalRevenue))
+            .attr('height', d => 400 - y(d.rev))
             .attr('fill', 'rebeccapurple')
+            // Highlight bars that are clickable when mouse hovers
+            // (Could not get the check for states length working)
+            .on("mouseover", function(d,i) {
+              d3.select(this)
+              .style("fill", "mediumpurple")
+            }).on("mouseout", function() {
+              d3.select(this)
+              .style("fill", "rebeccapurple")
+            })
             .on('click', (event, d) => {
               // Sets expanded country to the chosen country (and prompts vis to refresh)
               setExpandedCountry(d.country);
@@ -103,9 +119,16 @@ const RevByCountryBar = () => {
           // Search processed dataset and pull the total revenue and state/revenue tuples for each country
           const countryData = processedData.find(([c]) => c === expandedCountry)[1];
           // Get the state tuples isolated from the country
-          const states = countryData.states;
+          const states = countryData.states.map(([state, revenue]) =>({
+            state,
+            rev: revMode === 'total' 
+              ? revenue 
+              : revenue / data.filter(d => d['State'] === state).length || 0,
+          }));
           // Filter states by revenue specified on sliders
-          const filteredStates = states.filter(([, revenue]) => revenue >= minRevenue && revenue <= maxRevenue);
+          const filteredStates = states.filter(
+            d => d.rev >= minRevenue && d.rev <= maxRevenue
+          );
     
           // Don't bother expanding if there's no states, or only 1 state, listed. This will not be engaging or fun.
           if (states.length <= 1) {
@@ -115,13 +138,13 @@ const RevByCountryBar = () => {
             // Define x scale
             const stateX = d3.scaleBand()
               // Get state names for x axis
-              .domain(filteredStates.map(d => d[0]))
+              .domain(filteredStates.map(d => d.state))
               .range([0, 800])
               .padding(0.1);
   
             const stateY = d3.scaleLinear()
               // Max y val is max value of any state's revenue from the list of tuples
-              .domain([0, d3.max(filteredStates, ([, revenue]) => revenue)])
+              .domain([0, d3.max(filteredStates, d=> d.rev)])
               .range([400, 0]);
 
 
@@ -146,10 +169,10 @@ const RevByCountryBar = () => {
               .enter()
               .append('rect')
               .attr('class', 'state-bar')
-              .attr('x', d => stateX(d[0]))
-              .attr('y', d => stateY(d[1]))
+              .attr('x', d => stateX(d.state))
+              .attr('y', d => stateY(d.rev))
               .attr('width', stateX.bandwidth())
-              .attr('height', d => 400 - stateY(d[1]))
+              .attr('height', d => 400 - stateY(d.rev))
               .attr('fill', 'mediumpurple');
     
             // Back button to leave states view
@@ -160,6 +183,13 @@ const RevByCountryBar = () => {
               .style("cursor", "pointer")
               .style("fill", "rebeccapurple")
               .text("Back")
+              .on("mouseover", function(d,i) {
+                d3.select(this)
+                .style("fill", "mediumpurple")
+              }).on("mouseout", function() {
+                d3.select(this)
+                .style("fill", "rebeccapurple")
+              })
               .on("click", () => {
                 // Reset expanded country when button is clicked
                 setExpandedCountry(null);
@@ -167,13 +197,43 @@ const RevByCountryBar = () => {
             }
         }
       }
-    }, [data, expandedCountry, minRevenue, maxRevenue]);  // Re-render when data, expandedCountry, or revenue range changes
+    }, [data, expandedCountry, minRevenue, maxRevenue, revMode]);  // Re-render when data, expandedCountry, or revenue range changes
   
     // Sliders are above chart
     // Name of slider is to the left of the slider,
     // value is below the slider
+    // Toggle for average vs. total revenue is to top-right of sliders
     return (
       <div>
+        <div style={{ marginBottom: '20px', textAlign: 'center' }}>
+          <button 
+          // This is the total revenue by country/state button (makes chart
+          // show the total revenue for an entity)
+            onClick={() => setRevMode('total')} 
+            style={{ 
+              backgroundColor: revMode === 'total' ? 'mediumpurple' : '#ddd', 
+              color: revMode === 'total' ? 'white' : 'black', 
+              marginRight: '10px', 
+              padding: '10px', 
+              cursor: 'pointer' 
+            }}
+          >
+            Total Revenue
+          </button>
+          <button 
+          // This is the avg revenue by country/state button (shows avg revenue
+          // divided by transactions for the given entity)
+            onClick={() => setRevMode('average')} 
+            style={{ 
+              backgroundColor: revMode === 'average' ? 'mediumpurple' : '#ddd', 
+              color: revMode === 'average' ? 'white' : 'black', 
+              padding: '10px', 
+              cursor: 'pointer' 
+            }}
+          >
+            Average Revenue
+          </button>
+        </div>
         <div style={{ marginBottom: '20px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
             <div style={{ textAlign: 'center' }}>
