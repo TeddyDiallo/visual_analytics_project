@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import './App.css';
-import BarChart from './BarChart';
 import RevByCountryBar from './RevByCountry';
 //import QuantPriceLine from './QuantByPrice';
 
@@ -27,15 +26,13 @@ function App() {
       {/* Navbar */}
       <nav className="navbar">
         <ul>
-          <li onClick={() => alert('Team Members')}>Team Members</li>
-          <li onClick={() => alert('About')}>About</li>
+          <li onClick={() => alert('Teddy Diallo, Nandini, Chelsea')}>Team Members</li>
+          <li onClick={() => alert('This is a dashboard that visualizes sales data. It provides insights into the sales performance of different products and categories.')}>About</li>
         </ul>
       </nav>
       
-      {/* Title */}
       <h1 className="page-title">Sales Data Dashboard</h1>
 
-      {/* Sidebar */}
       <div className={`sidebar ${sidebarCollapsed ? 'collapsed' : ''}`}>
         <button onClick={toggleSidebar} className="collapse-btn">
           {sidebarCollapsed ? '>' : '<'}
@@ -50,23 +47,7 @@ function App() {
 
       {/* Main content */}
       <div className="content">
-        {/* Bar Chart Section */}
         <div id="bar-chart-section">
-          <h2>Bar Chart: Product Quantity by Category</h2>
-          <BarChart />
-
-          <div className="explanation">
-            <button onClick={() => setShowExplanation(!showExplanation)}>
-              {showExplanation ? 'Hide Explanation' : 'Show Explanation'}
-            </button>
-            {showExplanation && (
-              <p>
-                This bar chart represents the quantity of products sold across different product categories.
-                It gives insights into which categories perform better in terms of sales volume.
-              </p>
-            )}
-          </div>
-
           <h2>Bar Chart: Revenue by Country</h2>
           <RevByCountryBar />
           
@@ -81,10 +62,7 @@ function App() {
                 countries with states or provinces, click on the bar to expand the revenue view to statewise.
               </p>
             )}
-          </div>
-
-          <h2>Bar Chart: Quantity by Price</h2>
-          
+          </div>          
           
         </div>
 

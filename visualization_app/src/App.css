@@ -107,3 +107,13 @@
 #bar-chart-section {
   margin-bottom: 50px;
 }
+
+.explanation {
+  margin-top: 20px; /* Adds space above the explanation section */
+  margin-bottom: 20px; /* Adds space below the explanation section */
+}
+
+.explanation button {
+  margin-top: 35px; /* Adds space above the button */
+  margin-bottom: 10px; /* Adds space below the button */
+}

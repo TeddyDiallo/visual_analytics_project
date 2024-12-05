@@ -1,0 +1,152 @@
+/* General Page Styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4faff; /* Light blue background for the page */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centers content horizontally */
+    justify-content: flex-start; /* Keeps content starting from the top */
+}
+
+/* Header and Filters Section */
+h2 {
+    text-align: center;
+    margin-top: 20px;
+    color: #333; /* Darker color for better readability */
+}
+
+#filters {
+    margin: 20px;
+    text-align: center;
+}
+
+label, select {
+    font-size: 16px;
+    margin: 0 10px;
+}
+
+/* Map Container Styling */
+#map-container {
+    display: flex;
+    justify-content: center; /* Center the maps horizontally */
+    align-items: center; /* Align the maps vertically */
+    gap: 20px; /* Space between the two maps */
+    padding: 20px;
+    background-color: #e0f7fa; /* Slightly darker blue background for the map container */
+    border-radius: 10px; /* Rounded corners for the container */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    width: 80%; /* Limit the width of the container */
+    max-width: 1200px; /* Prevent the container from growing too wide */
+}
+
+/* Individual Map Styling */
+#map1, #map2 {
+    flex: 1; /* Each map takes equal space */
+    display: flex;
+    flex-direction: column; /* Stack title and map vertically */
+    align-items: center; /* Center the content */
+    justify-content: center; /* Center vertically */
+    background-color: white; /* White background for maps */
+    padding: 10px;
+    border: 1px solid #ccc; /* Border around each map */
+    border-radius: 10px; /* Rounded corners for the maps */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for each map */
+    height: 350px;
+}
+
+svg {
+    width: 100%; /* Make SVG scale with container */
+    height: auto; /* Maintain aspect ratio */
+}
+
+h3 {
+    margin: 10px 0;
+    font-size: 16px;
+    color: #333;
+    text-align: center;
+}
+
+/* General legend styling */
+.legend {
+    display: block; /* Initially hidden */
+    font-size: 14px;
+    color: #333;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: left; /* Align text to the left */
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%); /* Center vertically */
+    right: 10px; /* Position to the right of the maps */
+    z-index: 10;
+}
+
+#map1 {
+    position: relative; /* Needed for the legend to position correctly */
+}
+
+#map2 {
+    position: relative; /* Needed for the legend to position correctly */
+}
+
+.legend-container {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px; /* Space between map and legend */
+    font-size: 12px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.legend-color {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    border: 1px solid #000;
+}
+
+.legend-label {
+    font-size: 12px;
+    color: #333;
+}
+
+#external-timeseries-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background-color: #e0f7fa;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 1200px;
+}
+
+#time-series-chart {
+    background-color: white;
+    border: 1px solid #ccc; /* Border around each map */
+    border-radius: 10px; /* Rounded corners for the maps */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for each map */
+}
+
+.tooltip {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    display: none;
+    z-index: 1000; /* Ensure it is on top of other elements */
+    pointer-events: none; /* Prevent the tooltip from interfering with mouse events */
+}
